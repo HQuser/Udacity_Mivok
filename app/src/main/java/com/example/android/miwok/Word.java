@@ -6,14 +6,23 @@ package com.example.android.miwok;
 
 public class Word {
     private static final int NO_IMAGE_STATE = -1;
+
     private String mDefaultTranslation;
     private String mMiwokTranslation;
     private int mImageRecourseId = NO_IMAGE_STATE;
+    private int mMivokPronounciation;
 
-    public Word(String mDefaultTranslation, String mMiwokTranslation, int mImageRecourseId) {
+    public Word(String mDefaultTranslation, String mMiwokTranslation, int mImageRecourseId, int mMivokPronounciation) {
         this.mDefaultTranslation = mDefaultTranslation;
         this.mMiwokTranslation = mMiwokTranslation;
         this.mImageRecourseId = mImageRecourseId;
+        this.mMivokPronounciation = mMivokPronounciation;
+    }
+
+    public Word(String mDefaultTranslation, String mMiwokTranslation, int mMivokPronounciation) {
+        this.mDefaultTranslation = mDefaultTranslation;
+        this.mMiwokTranslation = mMiwokTranslation;
+        this.mMivokPronounciation = mMivokPronounciation;
     }
 
     public Word(String mDefaultTranslation, String mMiwokTranslation) {
@@ -32,6 +41,10 @@ public class Word {
 
     public String getmiwokTranslation() {
         return mMiwokTranslation;
+    }
+
+    public int getMivokPronounciation() {
+        return mMivokPronounciation;
     }
 
     public boolean hasImage() {
