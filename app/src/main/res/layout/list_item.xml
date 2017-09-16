@@ -3,32 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:paddingLeft="16dp"
-    android:paddingTop="16dp">
+    android:background="@color/tan_background"
+    android:minHeight="@dimen/list_item_height"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/color_black" />
+        android:layout_width="@dimen/list_item_height"
+        android:layout_height="@dimen/list_item_height" />
 
     <LinearLayout
+        android:id="@+id/text_views"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="16dp">
 
         <TextView
             android:id="@+id/mivok_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
             tools:text="lutti" />
 
         <TextView
             android:id="@+id/default_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="one" />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white"
+            tools:text="one" />/>
     </LinearLayout>
 </LinearLayout>
