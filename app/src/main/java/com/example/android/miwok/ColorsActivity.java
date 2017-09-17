@@ -15,6 +15,8 @@
  */
 package com.example.android.miwok;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,9 +26,34 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+
 public class ColorsActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
+    // Getting Audio manager to get audio stream
+    private AudioManager mAudioManager;
+    // Setting up audio focus change listener
+    private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                // Permanent loss of audio focus
+                // Release resources
+                releaseMediaPlayer();
+            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                // Pause playback
+                mMediaPlayer.pause();
+                mMediaPlayer.seekTo(0);
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Your app has been granted audio focus again
+                // Raise volume to normal, restart playback if necessary
+                mMediaPlayer.start();
+            }
+
+        }
+    };
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
@@ -64,13 +91,33 @@ public class ColorsActivity extends AppCompatActivity {
                 // Release any previous media player
                 releaseMediaPlayer();
 
-                // Create a new media player
-                mMediaPlayer = MediaPlayer.create(getApplicationContext(), audioFile);
+                // Initializing Audio Manager
+                mAudioManager = (AudioManager)
+                        getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
-                mMediaPlayer.start();
+                // Setting stream to transient music type
+                int requestResult = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
+                        AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
-                // Release Media plaer on audio completion
-                mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                // Only If stream is available setup media player and play
+                if (requestResult == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    // Create a new media player
+                    mMediaPlayer = MediaPlayer.create(getApplicationContext(), audioFile);
+
+                    // Release Media player on audio completion
+                    mMediaPlayer.setOnCompletionListener(mCompletionListener);
+
+                    // Finally start the file
+                    mMediaPlayer.start();
+
+                    // Create a new media player
+                    mMediaPlayer = MediaPlayer.create(getApplicationContext(), audioFile);
+
+                    mMediaPlayer.start();
+
+                    // Release Media plaer on audio completion
+                    mMediaPlayer.setOnCompletionListener(mCompletionListener);
+                }
             }
         });
     }
@@ -89,6 +136,18 @@ public class ColorsActivity extends AppCompatActivity {
             // setting the media player to null is an easy way to tell that the media player
             // is not configured to play an audio file at the moment.
             mMediaPlayer = null;
+
+            // Release Audio Stream once playback is either interrupted or stopped
+            mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
         }
+    }
+
+    /*
+     * Stop media player as soon as user leaves this activity
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        releaseMediaPlayer();
     }
 }
