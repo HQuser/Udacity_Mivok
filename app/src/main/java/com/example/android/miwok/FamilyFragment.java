@@ -64,6 +64,7 @@ public class FamilyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
 
         // Storing Words to be displayed on the ListView
         final ArrayList<Word> words = new ArrayList<>();
@@ -82,10 +83,7 @@ public class FamilyFragment extends Fragment {
         // Setting Custom WordAdapter
         WordAdapter itemsAdapter = new WordAdapter(getActivity(), words, R.color.category_family);
 
-        ListView listView = container.findViewById(R.id.list);
-
-        if (listView == null)
-            listView = (ListView) inflater.inflate(R.layout.word_list, container, false);
+        ListView listView = rootView.findViewById(R.id.list);
 
         listView.setAdapter(itemsAdapter);
 
@@ -121,13 +119,13 @@ public class FamilyFragment extends Fragment {
 
                     mMediaPlayer.start();
 
-                    // Release Media plaer on audio completion
+                    // Release Media plaYer on audio completion
                     mMediaPlayer.setOnCompletionListener(mCompletionListener);
                 }
             }
         });
 
-        return listView;
+        return rootView;
     }
 
     /**

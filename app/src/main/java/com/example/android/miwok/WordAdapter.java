@@ -19,12 +19,12 @@ import java.util.ArrayList;
  */
 
 public class WordAdapter extends ArrayAdapter<Word> {
-    private static int backgroundColor;
+    private int mBackgroundColor;
 
     public WordAdapter(@NonNull Context context, @NonNull ArrayList<Word> objects, int backgroundColor) {
         super(context, 0, objects);
 
-        WordAdapter.backgroundColor = ContextCompat.getColor(getContext(), backgroundColor);
+        this.mBackgroundColor = ContextCompat.getColor(getContext(), backgroundColor);
     }
 
     @NonNull
@@ -34,9 +34,6 @@ public class WordAdapter extends ArrayAdapter<Word> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         }
-
-        LinearLayout text_views = convertView.findViewById(R.id.text_views);
-        text_views.setBackgroundColor(backgroundColor);
 
         Word currentWord = getItem(position);
 
@@ -54,6 +51,9 @@ public class WordAdapter extends ArrayAdapter<Word> {
         } else {
             imageView.setVisibility(View.GONE);
         }
+
+        LinearLayout text_views = convertView.findViewById(R.id.text_views);
+        text_views.setBackgroundColor(mBackgroundColor);
 
         return convertView;
     }

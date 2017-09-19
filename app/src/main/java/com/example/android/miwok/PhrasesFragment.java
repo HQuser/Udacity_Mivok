@@ -61,6 +61,7 @@ public class PhrasesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
 
         final ArrayList<Word> words = new ArrayList<>();
 
@@ -77,10 +78,7 @@ public class PhrasesFragment extends Fragment {
 
         WordAdapter itemsAdapter = new WordAdapter(getActivity(), words, R.color.category_phrases);
 
-        ListView listView = container.findViewById(R.id.list);
-
-        if (listView == null)
-            listView = (ListView) inflater.inflate(R.layout.word_list, container, false);
+        ListView listView = rootView.findViewById(R.id.list);
 
         listView.setAdapter(itemsAdapter);
 
@@ -114,7 +112,7 @@ public class PhrasesFragment extends Fragment {
             }
         });
 
-        return listView;
+        return rootView;
     }
 
 
